@@ -1,2 +1,1 @@
-# mobileDev
-Labs for "Mobile Development" course
+# Integral calculation app using React Native
