@@ -25,18 +25,19 @@ class ParabolicFunction extends Function {
 }
 
 class SinusoidFunction extends Function {
-  constructor(coefs, integralRule) {
-    super(coefs, integralRule);
+  fX(x) {
+    const {a, b, c, d} = this.coefs;
+    return a * Math.sin(b * x + c) + d;
   }
 }
 
-const test_instance = new ParabolicFunction({
+const parabolic_instance = new ParabolicFunction({
   a: 1,
   b: 0,
   c: 0,
 });
 
-test_instance.chooseIntegralRule(
+parabolic_instance.chooseIntegralRule(
   new MidpointRule(
     {
       start: 0,
@@ -46,10 +47,10 @@ test_instance.chooseIntegralRule(
   ),
 );
 
-const result1 = test_instance.calculateIntegral();
+const result1 = parabolic_instance.calculateIntegral();
 console.log(result1);
 
-test_instance.chooseIntegralRule(
+parabolic_instance.chooseIntegralRule(
   new TrapezoidRule(
     {
       start: 0,
@@ -59,10 +60,10 @@ test_instance.chooseIntegralRule(
   ),
 );
 
-const result2 = test_instance.calculateIntegral();
+const result2 = parabolic_instance.calculateIntegral();
 console.log(result2);
 
-test_instance.chooseIntegralRule(
+parabolic_instance.chooseIntegralRule(
   new SimpsonRule(
     {
       start: 0,
@@ -72,5 +73,51 @@ test_instance.chooseIntegralRule(
   ),
 );
 
-const result3 = test_instance.calculateIntegral();
+const result3 = parabolic_instance.calculateIntegral();
 console.log(result3);
+
+const sinusoid_instance = new SinusoidFunction({
+  a: 2,
+  b: 1,
+  c: 0,
+  d: 0,
+});
+
+sinusoid_instance.chooseIntegralRule(
+  new MidpointRule(
+    {
+      start: 0,
+      end: 4,
+    },
+    5,
+  ),
+);
+
+const result4 = sinusoid_instance.calculateIntegral();
+console.log(result4);
+
+sinusoid_instance.chooseIntegralRule(
+  new TrapezoidRule(
+    {
+      start: 0,
+      end: 4,
+    },
+    5,
+  ),
+);
+
+const result5 = sinusoid_instance.calculateIntegral();
+console.log(result5);
+
+sinusoid_instance.chooseIntegralRule(
+  new SimpsonRule(
+    {
+      start: 0,
+      end: 4,
+    },
+    5,
+  ),
+);
+
+const result6 = sinusoid_instance.calculateIntegral();
+console.log(result6);
