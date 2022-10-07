@@ -2,29 +2,30 @@ import React, {useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-const functionChoices = ['parabolic', 'sinusoid'];
+const integralRuleChoices = ['midpoint', 'trapezoid', 'simpson'];
 
-const FunctionCheckbox = ({navigation}) => {
+const CalculationMethodCheckbox = ({route, navigation}) => {
   const [selected, setSelection] = useState();
 
   return (
     <View style={styles.container}>
-      {functionChoices.map(functionChoice => (
-        <View style={styles.checkboxContainer} key={functionChoice}>
+      {integralRuleChoices.map(ruleChoice => (
+        <View style={styles.checkboxContainer} key={ruleChoice}>
           <CheckBox
-            value={selected === functionChoice}
-            onValueChange={value => setSelection(value ? functionChoice : null)}
+            value={selected === ruleChoice}
+            onValueChange={value => setSelection(value ? ruleChoice : null)}
             style={styles.checkbox}
           />
-          <Text style={styles.label}>{functionChoice}</Text>
+          <Text style={styles.label}>{ruleChoice} rule</Text>
         </View>
       ))}
       {selected && (
         <Button
-          title="Continue"
+          title="Calculate integral"
           onPress={() => {
-            navigation.navigate('Coefficients input', {
-              functionChoice: selected,
+            navigation.navigate('Integral calculator', {
+              ruleChoice: selected,
+              ...route.params,
             });
           }}
         />
@@ -52,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FunctionCheckbox;
+export default CalculationMethodCheckbox;

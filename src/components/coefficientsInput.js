@@ -10,11 +10,11 @@ const CoefficientsInput = ({route, navigation}) => {
   const [enteredCoefs, setEnteredCoefs] = useState({});
 
   const {functionChoice} = route.params;
-  const funcionCoefs = coefs[functionChoice];
+  const functionCoefs = coefs[functionChoice];
 
   const onChangeCoef = (coef, value) => {
     const updatedCoefs = {...enteredCoefs};
-    updatedCoefs[coef] = value;
+    updatedCoefs[coef] = Number(value) || 0;
 
     console.log(updatedCoefs);
     setEnteredCoefs(updatedCoefs);
@@ -24,7 +24,7 @@ const CoefficientsInput = ({route, navigation}) => {
     <View style={styles.container}>
       <Text>Enter coefficients for {functionChoice} function</Text>
 
-      {funcionCoefs.map(coef => (
+      {functionCoefs.map(coef => (
         <View style={styles.coef} key={coef}>
           <Text>{coef}</Text>
           <TextInput
@@ -32,15 +32,23 @@ const CoefficientsInput = ({route, navigation}) => {
             keyboardType="numeric"
             onChangeText={value => onChangeCoef(coef, value)}
             defaultValue={0}
+            value={enteredCoefs[coef]}
+            maxLength={10}
           />
         </View>
       ))}
-      <Button
-        title="Calculate Integral"
-        onPress={() => {
-          navigation.navigate('Calculate integral', {coefs: enteredCoefs});
-        }}
-      />
+      {enteredCoefs &&
+        Object.keys(enteredCoefs).length === functionCoefs.length && (
+          <Button
+            title="Continue"
+            onPress={() => {
+              navigation.navigate('Interval input', {
+                coefs: enteredCoefs,
+                functionChoice,
+              });
+            }}
+          />
+        )}
     </View>
   );
 };
