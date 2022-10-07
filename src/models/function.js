@@ -1,4 +1,4 @@
-const {MidpointRule, TrapezoidRule, SimpsonRule} = require('./integralRule.js');
+// const {MidpointRule, TrapezoidRule, SimpsonRule} = require('./integralRule.js');
 
 class Function {
   constructor(coefs, integralRule = null) {
@@ -31,93 +31,95 @@ class SinusoidFunction extends Function {
   }
 }
 
-const parabolic_instance = new ParabolicFunction({
-  a: 1,
-  b: 0,
-  c: 0,
-});
+// const parabolic_instance = new ParabolicFunction({
+//   a: 1,
+//   b: 0,
+//   c: 0,
+// });
 
-parabolic_instance.chooseIntegralRule(
-  new MidpointRule(
-    {
-      start: 0,
-      end: 1,
-    },
-    4,
-  ),
-);
+// parabolic_instance.chooseIntegralRule(
+//   new MidpointRule(
+//     {
+//       start: 0,
+//       end: 1,
+//     },
+//     4,
+//   ),
+// );
 
-const result1 = parabolic_instance.calculateIntegral();
-console.log(result1);
+// const result1 = parabolic_instance.calculateIntegral();
+// console.log(result1);
 
-parabolic_instance.chooseIntegralRule(
-  new TrapezoidRule(
-    {
-      start: 0,
-      end: 1,
-    },
-    4,
-  ),
-);
+// parabolic_instance.chooseIntegralRule(
+//   new TrapezoidRule(
+//     {
+//       start: 0,
+//       end: 1,
+//     },
+//     4,
+//   ),
+// );
 
-const result2 = parabolic_instance.calculateIntegral();
-console.log(result2);
+// const result2 = parabolic_instance.calculateIntegral();
+// console.log(result2);
 
-parabolic_instance.chooseIntegralRule(
-  new SimpsonRule(
-    {
-      start: 0,
-      end: 1,
-    },
-    4,
-  ),
-);
+// parabolic_instance.chooseIntegralRule(
+//   new SimpsonRule(
+//     {
+//       start: 0,
+//       end: 1,
+//     },
+//     4,
+//   ),
+// );
 
-const result3 = parabolic_instance.calculateIntegral();
-console.log(result3);
+// const result3 = parabolic_instance.calculateIntegral();
+// console.log(result3);
 
-const sinusoid_instance = new SinusoidFunction({
-  a: 2,
-  b: 1,
-  c: 0,
-  d: 0,
-});
+// const sinusoid_instance = new SinusoidFunction({
+//   a: 2,
+//   b: 1,
+//   c: 0,
+//   d: 0,
+// });
 
-sinusoid_instance.chooseIntegralRule(
-  new MidpointRule(
-    {
-      start: 0,
-      end: 4,
-    },
-    5,
-  ),
-);
+// sinusoid_instance.chooseIntegralRule(
+//   new MidpointRule(
+//     {
+//       start: 0,
+//       end: 4,
+//     },
+//     5,
+//   ),
+// );
 
-const result4 = sinusoid_instance.calculateIntegral();
-console.log(result4);
+// const result4 = sinusoid_instance.calculateIntegral();
+// console.log(result4);
 
-sinusoid_instance.chooseIntegralRule(
-  new TrapezoidRule(
-    {
-      start: 0,
-      end: 4,
-    },
-    5,
-  ),
-);
+// sinusoid_instance.chooseIntegralRule(
+//   new TrapezoidRule(
+//     {
+//       start: 0,
+//       end: 4,
+//     },
+//     5,
+//   ),
+// );
 
-const result5 = sinusoid_instance.calculateIntegral();
-console.log(result5);
+// const result5 = sinusoid_instance.calculateIntegral();
+// console.log(result5);
 
-sinusoid_instance.chooseIntegralRule(
-  new SimpsonRule(
-    {
-      start: 0,
-      end: 4,
-    },
-    5,
-  ),
-);
+// sinusoid_instance.chooseIntegralRule(
+//   new SimpsonRule(
+//     {
+//       start: 0,
+//       end: 4,
+//     },
+//     5,
+//   ),
+// );
 
-const result6 = sinusoid_instance.calculateIntegral();
-console.log(result6);
+// const result6 = sinusoid_instance.calculateIntegral();
+// console.log(result6);
+
+module.exports = {ParabolicFunction, SinusoidFunction};
