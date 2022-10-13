@@ -112,7 +112,7 @@ const IntervalInput = ({route, navigation}) => {
           <Button
             title="Continue"
             onPress={() => {
-              navigation.navigate('Choose calculation rule', {
+              navigation.navigate('Integral calculator', {
                 interval,
                 stepsCount,
                 ...route.params,
