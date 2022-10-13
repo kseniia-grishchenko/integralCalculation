@@ -3,17 +3,12 @@
 class Function {
   constructor(coefs, integralRule = null) {
     this.coefs = coefs;
-    this.integralRule = integralRule;
-  }
-
-  chooseIntegralRule(rule) {
-    this.integralRule = rule;
   }
 
   fx() {}
 
-  calculateIntegral() {
-    return this.integralRule.calculate(this.fX.bind(this));
+  calculateIntegral(integralRule) {
+    return integralRule.calculate(this.fX.bind(this));
   }
 }
 
