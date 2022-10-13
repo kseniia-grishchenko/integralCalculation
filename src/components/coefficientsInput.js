@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 
 const coefs = {
@@ -8,6 +8,7 @@ const coefs = {
 
 const CoefficientsInput = ({route, navigation}) => {
   const [enteredCoefs, setEnteredCoefs] = useState({});
+  const [error, setError] = useState('');
 
   const {functionChoice} = route.params;
   const functionCoefs = coefs[functionChoice];
@@ -16,9 +17,19 @@ const CoefficientsInput = ({route, navigation}) => {
     const updatedCoefs = {...enteredCoefs};
     updatedCoefs[coef] = Number(value) || 0;
 
-    console.log(updatedCoefs);
     setEnteredCoefs(updatedCoefs);
   };
+
+  useEffect(() => {
+    if (
+      Object.keys(enteredCoefs).length === functionCoefs.length &&
+      Object.values(enteredCoefs).every(v => v === 0)
+    ) {
+      setError('All coefficients cannot be null! Please change the input');
+    } else {
+      setError('');
+    }
+  }, [enteredCoefs, functionCoefs]);
 
   return (
     <View style={styles.container}>
@@ -33,11 +44,12 @@ const CoefficientsInput = ({route, navigation}) => {
             onChangeText={value => onChangeCoef(coef, value)}
             defaultValue={0}
             value={enteredCoefs[coef]}
-            maxLength={10}
+            maxLength={5}
           />
         </View>
       ))}
-      {enteredCoefs &&
+      {!error &&
+        enteredCoefs &&
         Object.keys(enteredCoefs).length === functionCoefs.length && (
           <Button
             title="Continue"
@@ -49,6 +61,7 @@ const CoefficientsInput = ({route, navigation}) => {
             }}
           />
         )}
+      {error && <Text>{error}</Text>}
     </View>
   );
 };
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   input: {
-    width: 40,
+    width: 70,
     height: 40,
     margin: 12,
     borderWidth: 1,

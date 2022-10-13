@@ -4,16 +4,66 @@ import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 const IntervalInput = ({route, navigation}) => {
   const [interval, setInterval] = useState({});
   const [stepsCount, setStepsCount] = useState(1);
+  const [errors, setErrors] = useState({});
 
   const onChangePoint = (point, value) => {
+    if (isNaN(value)) {
+      setErrors({
+        ...errors,
+        intervalError: 'Value should be numeric!',
+      });
+      return;
+    }
+
     const updatedInterval = {...interval};
     updatedInterval[point] = Number(value) || 0;
 
+    console.log(updatedInterval);
+
+    if (
+      updatedInterval.start &&
+      updatedInterval.end &&
+      updatedInterval.start > updatedInterval.end
+    ) {
+      setErrors({
+        ...errors,
+        intervalError: 'Incorrect inteval. Start value should be less than end',
+      });
+      return;
+    }
+
+    if (errors.intervalError) {
+      setErrors({
+        ...errors,
+        intervalError: '',
+      });
+    }
     setInterval(updatedInterval);
   };
 
   const onChangeStepsCount = value => {
-    setStepsCount(Number(value) || 0);
+    if (isNaN(value)) {
+      setErrors({
+        ...errors,
+        subintervalAmountError: 'Value should be numeric!',
+      });
+      return;
+    }
+    if (value < 1) {
+      setErrors({
+        ...errors,
+        subintervalAmountError: 'Minimum interval amount is 1!',
+      });
+      return;
+    }
+    if (errors.subintervalAmountError) {
+      setErrors({
+        ...errors,
+        subintervalAmountError: '',
+      });
+    }
+
+    setStepsCount(Number(value) || 1);
   };
 
   return (
@@ -34,7 +84,7 @@ const IntervalInput = ({route, navigation}) => {
       </View>
 
       <View style={styles.coef} key="end">
-        <Text>Start point</Text>
+        <Text>End point</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
@@ -51,21 +101,27 @@ const IntervalInput = ({route, navigation}) => {
           keyboardType="numeric"
           onChangeText={value => onChangeStepsCount(value)}
           value={stepsCount}
-          maxLength={10}
+          maxLength={5}
         />
       </View>
 
-      {interval && stepsCount && Object.keys(interval).length === 2 && (
-        <Button
-          title="Continue"
-          onPress={() => {
-            navigation.navigate('Choose calculation rule', {
-              interval,
-              stepsCount,
-              ...route.params,
-            });
-          }}
-        />
+      {!Object.values(errors).some(err => err) &&
+        interval &&
+        stepsCount &&
+        Object.keys(interval).length === 2 && (
+          <Button
+            title="Continue"
+            onPress={() => {
+              navigation.navigate('Choose calculation rule', {
+                interval,
+                stepsCount,
+                ...route.params,
+              });
+            }}
+          />
+        )}
+      {Object.values(errors).some(err => err) && (
+        <Text>{errors.intervalError || errors.subintervalAmountError}</Text>
       )}
     </View>
   );
@@ -79,11 +135,11 @@ const styles = StyleSheet.create({
   },
   coef: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexDirection: 'row',
   },
   input: {
-    width: 40,
+    width: 70,
     height: 40,
     margin: 12,
     borderWidth: 1,

@@ -6,6 +6,7 @@ const {
   TrapezoidRule,
   SimpsonRule,
 } = require('../models/integralRule.js');
+import Plot from './plot.js';
 
 const initIntegralRule = (choice, interval, stepsCount) => {
   switch (choice) {
@@ -28,6 +29,7 @@ const initFunction = (functionChoice, coefs) => {
 };
 
 const IntegralCalculator = ({route, navigation}) => {
+  const [func, setFunc] = useState();
   const [result, setResult] = useState(null);
   useEffect(() => {
     const {functionChoice, ruleChoice, interval, stepsCount, coefs} =
@@ -38,6 +40,7 @@ const IntegralCalculator = ({route, navigation}) => {
     const currentFunction = initFunction(functionChoice, coefs);
 
     currentFunction.chooseIntegralRule(integralRule);
+    setFunc(currentFunction);
 
     setResult(currentFunction.calculateIntegral());
   }, [route]);
@@ -67,6 +70,7 @@ const IntegralCalculator = ({route, navigation}) => {
           <Text>{result}</Text>
         </>
       )}
+      {/* <Plot interval={route.params.interval} func={func} /> */}
     </View>
   );
 };
