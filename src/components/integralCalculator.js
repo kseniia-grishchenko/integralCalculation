@@ -8,17 +8,6 @@ const {
 } = require('../models/integralRule.js');
 import Plot from './plot.js';
 
-const initIntegralRule = (choice, interval, stepsCount) => {
-  switch (choice) {
-    case 'midpoint':
-      return new MidpointRule(interval, stepsCount);
-    case 'trapezoid':
-      return new TrapezoidRule(interval, stepsCount);
-    case 'simpson':
-      return new SimpsonRule(interval, stepsCount);
-  }
-};
-
 const initFunction = (functionChoice, coefs) => {
   switch (functionChoice) {
     case 'parabolic':
@@ -30,19 +19,20 @@ const initFunction = (functionChoice, coefs) => {
 
 const IntegralCalculator = ({route, navigation}) => {
   const [func, setFunc] = useState();
-  const [result, setResult] = useState(null);
+  const [results, setResults] = useState(null);
   useEffect(() => {
-    const {functionChoice, ruleChoice, interval, stepsCount, coefs} =
-      route.params;
-
-    const integralRule = initIntegralRule(ruleChoice, interval, stepsCount);
+    const {functionChoice, interval, stepsCount, coefs} = route.params;
 
     const currentFunction = initFunction(functionChoice, coefs);
-
-    currentFunction.chooseIntegralRule(integralRule);
     setFunc(currentFunction);
 
-    setResult(currentFunction.calculateIntegral());
+    setResults([
+      currentFunction.calculateIntegral(new MidpointRule(interval, stepsCount)),
+      currentFunction.calculateIntegral(
+        new TrapezoidRule(interval, stepsCount),
+      ),
+      currentFunction.calculateIntegral(new SimpsonRule(interval, stepsCount)),
+    ]);
   }, [route]);
 
   return (
@@ -64,10 +54,12 @@ const IntegralCalculator = ({route, navigation}) => {
       </Text>
 
       <Text>Steps count: {route.params.stepsCount}</Text>
-      {result && (
+      {results?.length && (
         <>
           <Text>Integral value is: </Text>
-          <Text>{result}</Text>
+          <Text>Midpoint rule: {results[0]}</Text>
+          <Text>Trapezoid rule: {results[1]}</Text>
+          <Text>Simpson rule: {results[2]}</Text>
         </>
       )}
       {/* <Plot interval={route.params.interval} func={func} /> */}
