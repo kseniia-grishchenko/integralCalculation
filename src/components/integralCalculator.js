@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {DataTable} from 'react-native-paper';
+import {range} from 'mathjs';
 const {ParabolicFunction, SinusoidFunction} = require('../models/function.js');
 const {
   MidpointRule,
@@ -20,20 +22,45 @@ const initFunction = (functionChoice, coefs) => {
 const IntegralCalculator = ({route, navigation}) => {
   const [func, setFunc] = useState();
   const [results, setResults] = useState(null);
+  const [xValues, setXValues] = useState([]);
+  const [yValues, setYValues] = useState([]);
+
   useEffect(() => {
     const {functionChoice, interval, stepsCount, coefs} = route.params;
 
     const currentFunction = initFunction(functionChoice, coefs);
     setFunc(currentFunction);
-
     setResults([
-      currentFunction.calculateIntegral(new MidpointRule(interval, stepsCount)),
-      currentFunction.calculateIntegral(
-        new TrapezoidRule(interval, stepsCount),
-      ),
-      currentFunction.calculateIntegral(new SimpsonRule(interval, stepsCount)),
+      [
+        'midpoint',
+        ...currentFunction.calculateIntegral(
+          new MidpointRule(interval, stepsCount),
+        ),
+      ],
+      [
+        'trapezoid',
+        ...currentFunction.calculateIntegral(
+          new TrapezoidRule(interval, stepsCount),
+        ),
+      ],
+      [
+        'simpson',
+        ...currentFunction.calculateIntegral(
+          new SimpsonRule(interval, stepsCount),
+        ),
+      ],
     ]);
   }, [route]);
+
+  useEffect(() => {
+    const interval = route.params.interval;
+    if (func && interval) {
+      const xVal = range(interval.start, interval.end + 0.5, 0.5).toArray();
+
+      setXValues(xVal);
+      setYValues(xVal.map(x => func.fX(x)));
+    }
+  }, [func, route]);
 
   return (
     <View style={styles.container}>
@@ -54,15 +81,28 @@ const IntegralCalculator = ({route, navigation}) => {
       </Text>
 
       <Text>Steps count: {route.params.stepsCount}</Text>
-      {results?.length && (
-        <>
-          <Text>Integral value is: </Text>
-          <Text>Midpoint rule: {results[0]}</Text>
-          <Text>Trapezoid rule: {results[1]}</Text>
-          <Text>Simpson rule: {results[2]}</Text>
-        </>
+      {results && (
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>Rule</DataTable.Title>
+            <DataTable.Title>Result</DataTable.Title>
+            <DataTable.Title>Time of execution</DataTable.Title>
+          </DataTable.Header>
+
+          {results.map(result => (
+            <DataTable.Row>
+              {result.map(innerRes => (
+                <DataTable.Cell>{innerRes}</DataTable.Cell>
+              ))}
+            </DataTable.Row>
+          ))}
+        </DataTable>
       )}
-      {/* <Plot interval={route.params.interval} func={func} /> */}
+      <Text>
+        {xValues.length && yValues.length && (
+          <Plot xValues={xValues} yValues={yValues} />
+        )}
+      </Text>
     </View>
   );
 };
