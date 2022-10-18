@@ -33,9 +33,11 @@ class MidpointRule extends IntegralRule {
 
   calculate(func) {
     const midPoints = this.calculateIntervalPoints();
-    return midPoints.reduce((sum, currentPoint) => {
-      return sum + this.delta * func(currentPoint);
-    }, 0);
+    return midPoints
+      .reduce((sum, currentPoint) => {
+        return sum + this.delta * func(currentPoint);
+      }, 0)
+      .toFixed(4);
   }
 }
 
@@ -54,13 +56,15 @@ class TrapezoidRule extends IntegralRule {
   calculate(fX) {
     const intervalPoints = this.calculateIntervalPoints();
     const lastIndex = intervalPoints.length - 1;
-    return intervalPoints.reduce((sum, currentPoint, index) => {
-      let funcExpr = 2 * fX(currentPoint);
-      if (index === 0 || index === lastIndex) {
-        funcExpr = fX(currentPoint);
-      }
-      return sum + 0.5 * this.delta * funcExpr;
-    }, 0);
+    return intervalPoints
+      .reduce((sum, currentPoint, index) => {
+        let funcExpr = 2 * fX(currentPoint);
+        if (index === 0 || index === lastIndex) {
+          funcExpr = fX(currentPoint);
+        }
+        return sum + 0.5 * this.delta * funcExpr;
+      }, 0)
+      .toFixed(4);
   }
 }
 
@@ -79,15 +83,17 @@ class SimpsonRule extends IntegralRule {
   calculate(fX) {
     const intervalPoints = this.calculateIntervalPoints();
     const lastIndex = intervalPoints.length - 1;
-    return intervalPoints.reduce((sum, currentPoint, index) => {
-      let funcExpr = 2 * fX(currentPoint);
-      if (index === 0 || index === lastIndex) {
-        funcExpr = fX(currentPoint);
-      } else if (index % 2 !== 0) {
-        funcExpr = 4 * fX(currentPoint);
-      }
-      return sum + (this.delta / 3) * funcExpr;
-    }, 0);
+    return intervalPoints
+      .reduce((sum, currentPoint, index) => {
+        let funcExpr = 2 * fX(currentPoint);
+        if (index === 0 || index === lastIndex) {
+          funcExpr = fX(currentPoint);
+        } else if (index % 2 !== 0) {
+          funcExpr = 4 * fX(currentPoint);
+        }
+        return sum + (this.delta / 3) * funcExpr;
+      }, 0)
+      .toFixed(4);
   }
 }
 
