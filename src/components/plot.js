@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, View, StyleSheet, Text} from 'react-native';
+import {Dimensions, View, StyleSheet} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 
 const Plot = ({xValues, yValues}) => {
