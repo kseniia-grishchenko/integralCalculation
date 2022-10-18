@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 import {DataTable} from 'react-native-paper';
 import {range} from 'mathjs';
+import RNFS from 'react-native-fs';
 const {ParabolicFunction, SinusoidFunction} = require('../models/function.js');
 const {
   MidpointRule,
@@ -62,6 +63,25 @@ const IntegralCalculator = ({route, navigation}) => {
     }
   }, [func, route]);
 
+  const readFile = async path => {
+    const response = await RNFS.readFile(path);
+    console.log(response);
+  };
+
+  const downloadCoefs = async () => {
+    try {
+      const filePath = RNFS.DocumentDirectoryPath + '/' + Date.now();
+      const coefs = route.params.coefs;
+
+      await RNFS.writeFile(filePath, JSON.stringify(coefs), 'utf8');
+      console.log('written to file', filePath);
+
+      readFile(filePath);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text>Your function is: </Text>
@@ -103,6 +123,8 @@ const IntegralCalculator = ({route, navigation}) => {
           <Plot xValues={xValues} yValues={yValues} />
         )}
       </Text>
+
+      <Button title="Donwload coeficcients" onPress={downloadCoefs} />
     </View>
   );
 };
