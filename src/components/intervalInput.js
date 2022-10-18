@@ -18,8 +18,6 @@ const IntervalInput = ({route, navigation}) => {
     const updatedInterval = {...interval};
     updatedInterval[point] = Number(value) || 0;
 
-    console.log(updatedInterval);
-
     if (
       updatedInterval.start &&
       updatedInterval.end &&
