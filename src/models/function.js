@@ -8,7 +8,11 @@ class Function {
   fx() {}
 
   calculateIntegral(integralRule) {
-    return integralRule.calculate(this.fX.bind(this));
+    const start = performance.now();
+    const result = integralRule.calculate(this.fX.bind(this));
+    const end = performance.now();
+
+    return [result, (end - start).toFixed(4)];
   }
 }
 
