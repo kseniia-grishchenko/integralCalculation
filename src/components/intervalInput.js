@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import ContinueBtn from './continueBtn.js';
 
 const IntervalInput = ({route, navigation}) => {
   const [interval, setInterval] = useState({});
-  const [stepsCount, setStepsCount] = useState(1);
+  const [intervalAmount, setIntervalAmount] = useState(1);
   const [errors, setErrors] = useState({});
 
   const onChangePoint = (point, value) => {
@@ -61,17 +62,17 @@ const IntervalInput = ({route, navigation}) => {
       });
     }
 
-    setStepsCount(Number(value) || 1);
+    setIntervalAmount(Number(value) || 1);
   };
 
   return (
     <View style={styles.container}>
-      <Text>
+      <Text style={styles.title}>
         Enter interval and amount of subintervals for integral calculation
       </Text>
 
       <View style={styles.coef} key="start">
-        <Text>Start point</Text>
+        <Text style={styles.inputTitle}>Start point:</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
@@ -82,7 +83,7 @@ const IntervalInput = ({route, navigation}) => {
       </View>
 
       <View style={styles.coef} key="end">
-        <Text>End point</Text>
+        <Text style={styles.inputTitle}>End point:</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
@@ -93,33 +94,34 @@ const IntervalInput = ({route, navigation}) => {
       </View>
 
       <View style={styles.coef} key="subinterval">
-        <Text>Amount of subintervals</Text>
+        <Text style={styles.inputTitle}>Amount of subintervals:</Text>
         <TextInput
           style={styles.input}
           keyboardType="numeric"
           onChangeText={value => onChangeStepsCount(value)}
-          value={stepsCount}
+          value={intervalAmount}
           maxLength={5}
         />
       </View>
 
       {!Object.values(errors).some(err => err) &&
         interval &&
-        stepsCount &&
+        intervalAmount &&
         Object.keys(interval).length === 2 && (
-          <Button
-            title="Continue"
-            onPress={() => {
-              navigation.navigate('Integral calculator', {
-                interval,
-                stepsCount,
-                ...route.params,
-              });
+          <ContinueBtn
+            navigation={navigation}
+            screenName={'Integral calculator'}
+            props={{
+              interval,
+              intervalAmount,
+              ...route.params,
             }}
           />
         )}
       {Object.values(errors).some(err => err) && (
-        <Text>{errors.intervalError || errors.subintervalAmountError}</Text>
+        <Text style={styles.errorText}>
+          {errors.intervalError || errors.subintervalAmountError}
+        </Text>
       )}
     </View>
   );
@@ -129,19 +131,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingTop: 130,
+    padding: 24,
+  },
+  title: {
+    fontFamily: 'Montserrat-ExtraBold',
+    fontSize: 25,
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  inputTitle: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+    marginBottom: 12,
   },
   coef: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    flexDirection: 'row',
+    marginBottom: 16,
   },
   input: {
     width: 70,
-    height: 40,
+    height: 48,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 5,
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+  },
+  errorText: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
   },
 });
 
