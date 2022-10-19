@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import ContinueBtn from './continueBtn.js';
 
 const coefs = {
   parabolic: ['a', 'b', 'c'],
@@ -37,35 +38,38 @@ const CoefficientsInput = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text>Enter coefficients for {functionChoice} function</Text>
+      <Text style={styles.title}>
+        Enter coefficients for {functionChoice} function
+      </Text>
+      <View style={styles.coefContainer}>
+        {functionCoefs.map(coef => (
+          <View style={styles.coef} key={coef}>
+            <Text style={styles.coefIndex}>{coef}:</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={value => onChangeCoef(coef, value)}
+              defaultValue={0}
+              value={enteredCoefs[coef]}
+              maxLength={5}
+            />
+          </View>
+        ))}
+      </View>
 
-      {functionCoefs.map(coef => (
-        <View style={styles.coef} key={coef}>
-          <Text>{coef}</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            onChangeText={value => onChangeCoef(coef, value)}
-            defaultValue={0}
-            value={enteredCoefs[coef]}
-            maxLength={5}
-          />
-        </View>
-      ))}
       {!error &&
         enteredCoefs &&
         Object.keys(enteredCoefs).length === functionCoefs.length && (
-          <Button
-            title="Continue"
-            onPress={() => {
-              navigation.navigate('Interval input', {
-                coefs: enteredCoefs,
-                functionChoice,
-              });
+          <ContinueBtn
+            navigation={navigation}
+            screenName={'Interval input'}
+            props={{
+              coefs: enteredCoefs,
+              functionChoice,
             }}
           />
         )}
-      {error && <Text>{error}</Text>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };
@@ -74,19 +78,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingTop: 130,
+    padding: 24,
+  },
+  title: {
+    fontFamily: 'Montserrat-ExtraBold',
+    fontSize: 25,
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  coefContainer: {
+    marginBottom: 30,
   },
   coef: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
+    fontFamily: 'Montserrat-Medium',
+    marginBottom: 16,
+  },
+  coefIndex: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+    marginBottom: 12,
   },
   input: {
     width: 70,
-    height: 40,
+    height: 48,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 5,
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
+  },
+  errorText: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 18,
   },
 });
 
