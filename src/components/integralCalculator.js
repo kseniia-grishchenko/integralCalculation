@@ -27,7 +27,7 @@ const IntegralCalculator = ({route, navigation}) => {
   const [yValues, setYValues] = useState([]);
 
   useEffect(() => {
-    const {functionChoice, interval, stepsCount, coefs} = route.params;
+    const {functionChoice, interval, intervalAmount, coefs} = route.params;
 
     const currentFunction = initFunction(functionChoice, coefs);
     setFunc(currentFunction);
@@ -35,19 +35,19 @@ const IntegralCalculator = ({route, navigation}) => {
       [
         'midpoint',
         ...currentFunction.calculateIntegral(
-          new MidpointRule(interval, stepsCount),
+          new MidpointRule(interval, intervalAmount),
         ),
       ],
       [
         'trapezoid',
         ...currentFunction.calculateIntegral(
-          new TrapezoidRule(interval, stepsCount),
+          new TrapezoidRule(interval, intervalAmount),
         ),
       ],
       [
         'simpson',
         ...currentFunction.calculateIntegral(
-          new SimpsonRule(interval, stepsCount),
+          new SimpsonRule(interval, intervalAmount),
         ),
       ],
     ]);
@@ -100,7 +100,7 @@ const IntegralCalculator = ({route, navigation}) => {
         Interval: [{route.params.interval.start}, {route.params.interval.end}]
       </Text>
 
-      <Text>Steps count: {route.params.stepsCount}</Text>
+      <Text>Steps count: {route.params.intervalAmount}</Text>
       {results && (
         <DataTable>
           <DataTable.Header>
@@ -110,9 +110,9 @@ const IntegralCalculator = ({route, navigation}) => {
           </DataTable.Header>
 
           {results.map(result => (
-            <DataTable.Row>
+            <DataTable.Row key={result}>
               {result.map(innerRes => (
-                <DataTable.Cell>{innerRes}</DataTable.Cell>
+                <DataTable.Cell key={innerRes}>{innerRes}</DataTable.Cell>
               ))}
             </DataTable.Row>
           ))}
