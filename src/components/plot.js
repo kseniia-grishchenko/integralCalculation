@@ -20,8 +20,8 @@ const Plot = ({xValues, yValues}) => {
         style={styles.chart}
         chartConfig={{
           backgroundColor: '#72bcd4',
-          backgroundGradientFrom: '#86c5da',
-          backgroundGradientTo: '#86c5da',
+          backgroundGradientFrom: '#3CA1FF',
+          backgroundGradientTo: '#3CA1FF',
           decimalPlaces: 2, // optional, defaults to 2dp
           color: (opacity = 255) => '#ECEFF1',
         }}
@@ -32,7 +32,7 @@ const Plot = ({xValues, yValues}) => {
 
 const styles = StyleSheet.create({
   chart: {
-    marginVertical: 8,
+    marginVertical: 4,
     borderRadius: 16,
   },
 });
