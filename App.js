@@ -9,6 +9,7 @@ import IntervalInput from './src/components/intervalInput.js';
 
 import {StyleSheet, TouchableOpacity, Image} from 'react-native';
 import arrow from './assets/icons/arrow.png';
+import ExecutorData from './src/components/executorData.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const App = () => {
           name="Integral calculator"
           component={IntegralCalculator}
         />
+        <Stack.Screen name="Executor data" component={ExecutorData} />
       </Stack.Navigator>
     </NavigationContainer>
   );
