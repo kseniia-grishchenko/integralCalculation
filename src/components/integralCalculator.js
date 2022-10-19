@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {DataTable} from 'react-native-paper';
 import {range} from 'mathjs';
 import RNFS from 'react-native-fs';
@@ -10,6 +10,7 @@ const {
   SimpsonRule,
 } = require('../models/integralRule.js');
 import Plot from './plot.js';
+import ContinueBtn from './continueBtn.js';
 
 const initFunction = (functionChoice, coefs) => {
   switch (functionChoice) {
@@ -54,9 +55,15 @@ const IntegralCalculator = ({route, navigation}) => {
   }, [route]);
 
   useEffect(() => {
-    const interval = route.params.interval;
+    const {interval, intervalAmount} = route.params;
     if (func && interval) {
-      const xVal = range(interval.start, interval.end + 0.5, 0.5).toArray();
+      const xVal = range(
+        interval.start,
+        interval.end + 0.5,
+        (interval.end - interval.start) / intervalAmount,
+      ).toArray();
+
+      console.log(xVal);
 
       setXValues(xVal);
       setYValues(xVal.map(x => func.fX(x)));
@@ -84,35 +91,40 @@ const IntegralCalculator = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text>Your function is: </Text>
+      <Text style={styles.title}>Your function is: </Text>
       {route.params.functionChoice === 'parabolic' ? (
-        <Text>
+        <Text style={styles.funcInfo}>
           {route.params.coefs.a}*x^2 + {route.params.coefs.b}*x +
           {route.params.coefs.c}
         </Text>
       ) : (
-        <Text>
+        <Text style={styles.funcInfo}>
           {route.params.coefs.a}*sin({route.params.coefs.b}*x +
           {route.params.coefs.c}) + d
         </Text>
       )}
-      <Text>
-        Interval: [{route.params.interval.start}, {route.params.interval.end}]
+      <Text style={styles.title}>Interval:</Text>
+      <Text style={styles.funcInfo}>
+        [{route.params.interval.start}, {route.params.interval.end}]
       </Text>
 
-      <Text>Steps count: {route.params.intervalAmount}</Text>
+      <Text style={styles.title}>Steps count:</Text>
+      <Text style={styles.funcInfo}>{route.params.intervalAmount}</Text>
+
       {results && (
-        <DataTable>
+        <DataTable style={styles.table}>
           <DataTable.Header>
             <DataTable.Title>Rule</DataTable.Title>
             <DataTable.Title>Result</DataTable.Title>
-            <DataTable.Title>Time of execution</DataTable.Title>
+            <DataTable.Title>Exec Time</DataTable.Title>
           </DataTable.Header>
 
           {results.map(result => (
             <DataTable.Row key={result}>
               {result.map(innerRes => (
-                <DataTable.Cell key={innerRes}>{innerRes}</DataTable.Cell>
+                <DataTable.Cell key={innerRes} textStyle={styles.cell}>
+                  {innerRes}
+                </DataTable.Cell>
               ))}
             </DataTable.Row>
           ))}
@@ -124,7 +136,17 @@ const IntegralCalculator = ({route, navigation}) => {
         )}
       </Text>
 
-      <Button title="Donwload coeficcients" onPress={downloadCoefs} />
+      <View style={styles.btnSection}>
+        <TouchableOpacity style={styles.btnContainer} onPress={downloadCoefs}>
+          <Text style={styles.btnText}>Donwload</Text>
+        </TouchableOpacity>
+        <ContinueBtn
+          width="46%"
+          text="Finish"
+          screenName={'Executor data'}
+          navigation={navigation}
+        />
+      </View>
     </View>
   );
 };
@@ -132,8 +154,47 @@ const IntegralCalculator = ({route, navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 76,
     alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontFamily: 'Montserrat-ExtraBold',
+    fontSize: 25,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  funcInfo: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  cell: {
+    fontSize: 14,
+    fontFamily: 'Montserrat-Medium',
+  },
+  table: {
+    marginBottom: 10,
+  },
+  btnContainer: {
+    width: '46%',
+    height: 50,
+    borderColor: '#3CA1FF',
+    borderWidth: 2,
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 10,
+    marginRight: 14,
+  },
+  btnText: {
+    fontFamily: 'Montserrat-SemiBold',
+    color: '#222222',
+    fontSize: 18,
+  },
+  btnSection: {
+    flexDirection: 'row',
+    marginTop: 12,
   },
 });
 
