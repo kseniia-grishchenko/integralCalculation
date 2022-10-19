@@ -15,7 +15,11 @@ const CoefficientsInput = ({route, navigation}) => {
 
   const onChangeCoef = (coef, value) => {
     const updatedCoefs = {...enteredCoefs};
-    updatedCoefs[coef] = Number(value) || 0;
+    if (isNaN(value)) {
+      setError('Value should be numeric');
+      return;
+    }
+    updatedCoefs[coef] = Number(value);
 
     setEnteredCoefs(updatedCoefs);
   };
