@@ -7,13 +7,33 @@ import CoefficientsInput from './src/components/coefficientsInput.js';
 import IntegralCalculator from './src/components/integralCalculator.js';
 import IntervalInput from './src/components/intervalInput.js';
 
+import {StyleSheet, TouchableOpacity, Image} from 'react-native';
+import arrow from './assets/icons/arrow.png';
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Choose function" component={FunctionCheckbox} />
+      <Stack.Navigator
+        screenOptions={({navigation, route}) => ({
+          headerTransparent: true,
+          headerTitle: '',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backBtn}>
+              <Image source={arrow} style={styles.btnImage} />
+            </TouchableOpacity>
+          ),
+        })}>
+        <Stack.Screen
+          name="Choose function"
+          component={FunctionCheckbox}
+          options={{
+            headerLeft: () => {},
+          }}
+        />
         <Stack.Screen name="Coefficients input" component={CoefficientsInput} />
         <Stack.Screen name="Interval input" component={IntervalInput} />
         <Stack.Screen
@@ -26,3 +46,18 @@ const App = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  backBtn: {
+    backgroundColor: '#F0F0F0',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+  },
+  btnImage: {
+    width: 16,
+    height: 8,
+  },
+});
