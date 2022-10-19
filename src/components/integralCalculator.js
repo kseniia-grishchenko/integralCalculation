@@ -63,8 +63,6 @@ const IntegralCalculator = ({route, navigation}) => {
         (interval.end - interval.start) / intervalAmount,
       ).toArray();
 
-      console.log(xVal);
-
       setXValues(xVal);
       setYValues(xVal.map(x => func.fX(x)));
     }
