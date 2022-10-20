@@ -11,6 +11,7 @@ const {
 } = require('../models/integralRule.js');
 import Plot from './plot.js';
 import ContinueBtn from './continueBtn.js';
+import Toast from 'react-native-toast-message';
 
 const initFunction = (functionChoice, coefs) => {
   switch (functionChoice) {
@@ -57,11 +58,8 @@ const IntegralCalculator = ({route, navigation}) => {
   useEffect(() => {
     const {interval, intervalAmount} = route.params;
     if (func && interval) {
-      const xVal = range(
-        interval.start,
-        interval.end + 0.5,
-        (interval.end - interval.start) / intervalAmount,
-      ).toArray();
+      const step = (interval.end - interval.start) / intervalAmount;
+      const xVal = range(interval.start, interval.end + step, step).toArray();
 
       setXValues(xVal);
       setYValues(xVal.map(x => func.fX(x)));
@@ -75,15 +73,26 @@ const IntegralCalculator = ({route, navigation}) => {
 
   const downloadCoefs = async () => {
     try {
-      const filePath = RNFS.DocumentDirectoryPath + '/' + Date.now();
+      const customFilePath = RNFS.DocumentDirectoryPath + '/' + Date.now();
       const coefs = route.params.coefs;
 
-      await RNFS.writeFile(filePath, JSON.stringify(coefs), 'utf8');
-      console.log('written to file', filePath);
+      await RNFS.writeFile(customFilePath, JSON.stringify(coefs), 'utf8');
+      console.log('written to file', customFilePath);
 
-      readFile(filePath);
+      Toast.show({
+        type: 'success',
+        text1: 'Sucess',
+        text2: `File is successfully downloaded to ${customFilePath}`,
+      });
+
+      readFile(customFilePath);
     } catch (error) {
       console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: `Error occured during file downloading: ${error}`,
+      });
     }
   };
 
@@ -105,10 +114,8 @@ const IntegralCalculator = ({route, navigation}) => {
       <Text style={styles.funcInfo}>
         [{route.params.interval.start}, {route.params.interval.end}]
       </Text>
-
       <Text style={styles.title}>Steps count:</Text>
       <Text style={styles.funcInfo}>{route.params.intervalAmount}</Text>
-
       {results && (
         <DataTable style={styles.table}>
           <DataTable.Header>
@@ -133,7 +140,6 @@ const IntegralCalculator = ({route, navigation}) => {
           <Plot xValues={xValues} yValues={yValues} />
         )}
       </Text>
-
       <View style={styles.btnSection}>
         <TouchableOpacity style={styles.btnContainer} onPress={downloadCoefs}>
           <Text style={styles.btnText}>Donwload</Text>
