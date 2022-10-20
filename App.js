@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Toast from 'react-native-toast-message';
 
 import FunctionCheckbox from './src/components/functionCheckbox.js';
 import CoefficientsInput from './src/components/coefficientsInput.js';
@@ -15,35 +16,41 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={({navigation, route}) => ({
-          headerTransparent: true,
-          headerTitle: '',
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backBtn}>
-              <Image source={arrow} style={styles.btnImage} />
-            </TouchableOpacity>
-          ),
-        })}>
-        <Stack.Screen
-          name="Choose function"
-          component={FunctionCheckbox}
-          options={{
-            headerLeft: () => {},
-          }}
-        />
-        <Stack.Screen name="Coefficients input" component={CoefficientsInput} />
-        <Stack.Screen name="Interval input" component={IntervalInput} />
-        <Stack.Screen
-          name="Integral calculator"
-          component={IntegralCalculator}
-        />
-        <Stack.Screen name="Executor data" component={ExecutorData} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={({navigation, route}) => ({
+            headerTransparent: true,
+            headerTitle: '',
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={styles.backBtn}>
+                <Image source={arrow} style={styles.btnImage} />
+              </TouchableOpacity>
+            ),
+          })}>
+          <Stack.Screen
+            name="Choose function"
+            component={FunctionCheckbox}
+            options={{
+              headerLeft: () => {},
+            }}
+          />
+          <Stack.Screen
+            name="Coefficients input"
+            component={CoefficientsInput}
+          />
+          <Stack.Screen name="Interval input" component={IntervalInput} />
+          <Stack.Screen
+            name="Integral calculator"
+            component={IntegralCalculator}
+          />
+          <Stack.Screen name="Executor data" component={ExecutorData} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Toast />
+    </>
   );
 };
 
