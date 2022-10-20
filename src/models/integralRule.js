@@ -35,7 +35,7 @@ class MidpointRule extends IntegralRule {
     const midPoints = this.calculateIntervalPoints();
     return midPoints
       .reduce((sum, currentPoint) => {
-        return sum + this.delta * func(currentPoint);
+        return sum + this.delta * Math.abs(func(currentPoint));
       }, 0)
       .toFixed(4);
   }
@@ -62,7 +62,7 @@ class TrapezoidRule extends IntegralRule {
         if (index === 0 || index === lastIndex) {
           funcExpr = fX(currentPoint);
         }
-        return sum + 0.5 * this.delta * funcExpr;
+        return sum + 0.5 * this.delta * Math.abs(funcExpr);
       }, 0)
       .toFixed(4);
   }
@@ -91,7 +91,7 @@ class SimpsonRule extends IntegralRule {
         } else if (index % 2 !== 0) {
           funcExpr = 4 * fX(currentPoint);
         }
-        return sum + (this.delta / 3) * funcExpr;
+        return sum + (this.delta / 3) * Math.abs(funcExpr);
       }, 0)
       .toFixed(4);
   }
